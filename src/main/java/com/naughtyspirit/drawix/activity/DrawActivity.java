@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import com.naughtyspirit.drawix.primitive.Rectangle;
+import com.naughtyspirit.drawix.primitive.Vertex;
 
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -26,9 +28,7 @@ import static android.opengl.GLES10.*;
  */
 public class DrawActivity extends Activity {
 
-  private class Vertex {
-    float x, y;
-  }
+  private Rectangle rectangle = null;
 
   private class CustomRenderer implements GLSurfaceView.Renderer {
 
@@ -53,36 +53,8 @@ public class DrawActivity extends Activity {
     public void onDrawFrame(GL10 openGl) {
       glClearColor(0, 0, 0, 1);
       glClear(GL10.GL_COLOR_BUFFER_BIT);
-
-      if (vertexList.size() == 3) {
-        Log.d("About to draw", "Drawingg...");
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(3 * 2 * 4);
-        byteBuffer.order(ByteOrder.nativeOrder());
-        FloatBuffer vertices = byteBuffer.asFloatBuffer();
-        float[] coordinates = new float[vertexList.size() * 2];
-        int index = 0;
-        for (int i = 0; i < vertexList.size(); i++, index += 2) {
-          coordinates[index] = vertexList.get(i).x;
-          coordinates[index + 1] = vertexList.get(i).y;
-        }
-        for (int i = 0; i < coordinates.length; i++) {
-          Log.d("Coordinate " + i, coordinates[i] + "");
-        }
-        vertices.put(coordinates);
-//        vertices.put(new float[]{
-//                0.0f, 0.0f,
-//                319.0f, 20.0f,
-//                160.0f, 479.0f});
-        vertices.flip();
-
-        glMatrixMode(GL10.GL_MODELVIEW);
-        glLoadIdentity();
-//        glTranslatef(10, 10, 0);
-//        glRotatef(45, 10, 10, 1);
-        glVertexPointer(2, GL10.GL_FLOAT, 0, vertices);
-
-
-        glDrawArrays(GL10.GL_TRIANGLES, 0, 3);
+      if(rectangle != null) {
+        rectangle.draw();
       }
     }
   }
@@ -93,6 +65,8 @@ public class DrawActivity extends Activity {
 
   private class DrawingSurface extends GLSurfaceView {
 
+    private Vertex a = null, b = null;
+
     public DrawingSurface(Context context) {
       super(context);
     }
@@ -101,27 +75,11 @@ public class DrawActivity extends Activity {
     public boolean onTouchEvent(MotionEvent event) {
       switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
-          if (drawingSurfaceRenderer.vertexList.size() > 3) {
-            return true;
-          }
-          Vertex vertex = new Vertex();
-          vertex.x = event.getX();
-          vertex.y = event.getY();
-          drawingSurfaceRenderer.vertexList.add(vertex);
-          if(drawingSurfaceRenderer.vertexList.size() == 2) {
-            Vertex a = drawingSurfaceRenderer.vertexList.get(0);
-            Vertex b = drawingSurfaceRenderer.vertexList.get(1);
-            drawingSurfaceRenderer.vertexList.remove(1);
-            Vertex c = new Vertex();
-            c.x = a.x;
-            c.y = b.y;
-            drawingSurfaceRenderer.vertexList.add(c);
-            Vertex d = new Vertex();
-            d.x = b.x;
-            d.y = a.y;
-            drawingSurfaceRenderer.vertexList.add(d);
-          }
-          if (drawingSurfaceRenderer.vertexList.size() == 3) {
+          if(a == null) {
+            a = new Vertex(event.getX(), event.getY());
+          } else if(b == null) {
+            b = new Vertex(event.getX(), event.getY());
+            rectangle = new Rectangle(a, b);
             requestRender();
           }
           break;

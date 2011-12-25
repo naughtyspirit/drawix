@@ -7,9 +7,9 @@ package com.naughtyspirit.drawix.primitive;
 public class Vertex {
   private float x, y;
 
-  public Vertex(float y, float x) {
-    this.y = y;
+  public Vertex(float x, float y) {
     this.x = x;
+    this.y = y;
   }
 
   public float getX() {
