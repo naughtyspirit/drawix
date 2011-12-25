@@ -12,11 +12,12 @@ import static android.opengl.GLES10.*;
  * Author: Venelin Valkov <venelin@naughtyspirit.com>
  * Date: 25-12-2011
  */
-public class Triangle {
+public class Triangle extends BaseDrawablePrimitive {
   private List<Vertex> vertexList = new LinkedList<Vertex>();
 
-  public Triangle(Vertex a, Vertex b, Vertex c) {
-    vertexList.add(a);
+  public Triangle(Vertex origin, Vertex b, Vertex c) {
+    super(origin);
+    vertexList.add(origin);
     vertexList.add(b);
     vertexList.add(c);
   }

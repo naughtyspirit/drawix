@@ -10,17 +10,13 @@ import static android.opengl.GLES10.*;
  * Author: Venelin Valkov <venelin@naughtyspirit.com>
  * Date: 25-12-2011
  */
-public class Line {
+public class Line extends BaseDrawablePrimitive {
 
-  private final Vertex origin, destination;
+  private final Vertex destination;
 
   public Line(Vertex origin, Vertex destination) {
-    this.origin = origin;
+    super(origin);
     this.destination = destination;
-  }
-
-  public Vertex getOrigin() {
-    return origin;
   }
 
   public Vertex getDestination() {
@@ -32,8 +28,8 @@ public class Line {
     buffer.order(ByteOrder.nativeOrder());
     FloatBuffer vertices = buffer.asFloatBuffer();
 
-    vertices.put(origin.getX());
-    vertices.put(origin.getY());
+    vertices.put(getOrigin().getX());
+    vertices.put(getOrigin().getY());
     vertices.put(destination.getX());
     vertices.put(destination.getY());
     vertices.position(0);

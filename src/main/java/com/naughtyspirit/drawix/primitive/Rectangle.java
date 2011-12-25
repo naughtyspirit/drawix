@@ -14,23 +14,24 @@ import static android.opengl.GLES10.*;
  * Author: Venelin Valkov <venelin@naughtyspirit.com>
  * Date: 25-12-2011
  */
-public class Rectangle {
+public class Rectangle extends BaseDrawablePrimitive {
   private final List<Vertex> vertexList = new LinkedList<Vertex>();
 
-  public Rectangle(Vertex a, Vertex b) {
-    vertexList.add(a);
+  public Rectangle(Vertex origin, Vertex destination) {
+    super(origin);
+    vertexList.add(origin);
 
     // c
-    vertexList.add(new Vertex(a.getX(), b.getY()));
+    vertexList.add(new Vertex(origin.getX(), destination.getY()));
     // d
-    vertexList.add(new Vertex(b.getX(), a.getY()));
+    vertexList.add(new Vertex(destination.getX(), origin.getY()));
 
     // c
-    vertexList.add(new Vertex(a.getX(), b.getY()));
+    vertexList.add(new Vertex(origin.getX(), destination.getY()));
     // d
-    vertexList.add(new Vertex(b.getX(), a.getY()));
+    vertexList.add(new Vertex(destination.getX(), origin.getY()));
 
-    vertexList.add(b);
+    vertexList.add(destination);
   }
 
   public void draw() {
