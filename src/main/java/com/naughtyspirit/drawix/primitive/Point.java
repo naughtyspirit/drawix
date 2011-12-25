@@ -11,10 +11,12 @@ import static android.opengl.GLES10.*;
  * Date: 25-12-2011
  */
 public class Point extends BaseDrawablePrimitive {
+
   public Point(Vertex origin) {
     super(origin);
   }
 
+  @Override
   public void draw() {
     ByteBuffer byteBuffer = ByteBuffer.allocateDirect(2 * 2 * 4);
     byteBuffer.order(ByteOrder.nativeOrder());

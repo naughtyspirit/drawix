@@ -23,6 +23,7 @@ public class Line extends BaseDrawablePrimitive {
     return destination;
   }
 
+  @Override
   public void draw() {
     ByteBuffer buffer = ByteBuffer.allocateDirect(4 * 2 * 2);
     buffer.order(ByteOrder.nativeOrder());

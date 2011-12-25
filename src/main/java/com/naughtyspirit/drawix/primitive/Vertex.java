@@ -5,6 +5,7 @@ package com.naughtyspirit.drawix.primitive;
  * Date: 25-12-2011
  */
 public class Vertex {
+
   private float x, y;
 
   public Vertex(float x, float y) {

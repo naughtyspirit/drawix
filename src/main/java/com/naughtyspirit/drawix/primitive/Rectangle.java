@@ -1,10 +1,8 @@
 package com.naughtyspirit.drawix.primitive;
 
-import javax.microedition.khronos.opengles.GL10;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +13,7 @@ import static android.opengl.GLES10.*;
  * Date: 25-12-2011
  */
 public class Rectangle extends BaseDrawablePrimitive {
+
   private final List<Vertex> vertexList = new LinkedList<Vertex>();
 
   public Rectangle(Vertex origin, Vertex destination) {
@@ -34,11 +33,12 @@ public class Rectangle extends BaseDrawablePrimitive {
     vertexList.add(destination);
   }
 
+  @Override
   public void draw() {
     ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertexList.size() * 2 * 4);
     byteBuffer.order(ByteOrder.nativeOrder());
     FloatBuffer vertices = byteBuffer.asFloatBuffer();
-    for(Vertex vertex : vertexList) {
+    for (Vertex vertex : vertexList) {
       vertices.put(vertex.getX());
       vertices.put(vertex.getY());
     }

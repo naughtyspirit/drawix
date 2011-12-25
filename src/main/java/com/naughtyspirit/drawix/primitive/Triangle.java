@@ -13,6 +13,7 @@ import static android.opengl.GLES10.*;
  * Date: 25-12-2011
  */
 public class Triangle extends BaseDrawablePrimitive {
+
   private List<Vertex> vertexList = new LinkedList<Vertex>();
 
   public Triangle(Vertex origin, Vertex b, Vertex c) {
@@ -22,11 +23,12 @@ public class Triangle extends BaseDrawablePrimitive {
     vertexList.add(c);
   }
 
+  @Override
   public void draw() {
     ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertexList.size() * 2 * 4);
     byteBuffer.order(ByteOrder.nativeOrder());
     FloatBuffer vertices = byteBuffer.asFloatBuffer();
-    for(Vertex vertex : vertexList) {
+    for (Vertex vertex : vertexList) {
       vertices.put(vertex.getX());
       vertices.put(vertex.getY());
     }

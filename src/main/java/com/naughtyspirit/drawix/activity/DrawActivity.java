@@ -4,19 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.Window;
-import android.view.WindowManager;
-import com.naughtyspirit.drawix.primitive.*;
-
+import android.view.*;
+import com.naughtyspirit.drawix.R;
+import com.naughtyspirit.drawix.primitive.BaseDrawablePrimitive;
+import com.naughtyspirit.drawix.primitive.Line;
+import com.naughtyspirit.drawix.primitive.Rectangle;
+import com.naughtyspirit.drawix.primitive.Vertex;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static android.opengl.GLES10.*;
@@ -27,10 +25,37 @@ import static android.opengl.GLES10.*;
  */
 public class DrawActivity extends Activity {
 
-  private Rectangle rectangle = null;
-  private Line line = null;
-  private Triangle triangle = null;
-  private Point point;
+  private final List<Vertex> selectedVertices = new ArrayList<Vertex>();
+
+  private final List<BaseDrawablePrimitive> primitives = new LinkedList<BaseDrawablePrimitive>();
+
+  private enum Primitives {RECTANGLE, LINE}
+
+  ;
+
+  private Primitives currentPrimitive = Primitives.RECTANGLE;
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.primitive_selection_menu, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.rectangle:
+        currentPrimitive = Primitives.RECTANGLE;
+        return true;
+
+      case R.id.line:
+        currentPrimitive = Primitives.LINE;
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
 
   private class CustomRenderer implements GLSurfaceView.Renderer {
 
@@ -46,25 +71,18 @@ public class DrawActivity extends Activity {
       // center is top left
       glMatrixMode(GL10.GL_PROJECTION);
       glLoadIdentity();
-      glOrthof(0, 320, 480, 0, 1, -1);
+      glOrthof(0, width, height, 0, 1, -1);
     }
 
     @Override
     public void onDrawFrame(GL10 openGl) {
       glClearColor(0, 0, 0, 1);
       glClear(GL10.GL_COLOR_BUFFER_BIT);
-//      if(line != null) {
-//        line.draw();
-//      }
-//      if(triangle != null) {
-//        triangle.draw();
-//      }
-      if(point != null) {
-        point.draw();
+
+      for (BaseDrawablePrimitive primitive : primitives) {
+        primitive.draw();
       }
-//      if(rectangle != null) {
-//        rectangle.draw();
-//      }
+
     }
   }
 
@@ -74,8 +92,6 @@ public class DrawActivity extends Activity {
 
   private class DrawingSurface extends GLSurfaceView {
 
-    private Vertex a = null, b = null, c = null;
-
     public DrawingSurface(Context context) {
       super(context);
     }
@@ -84,18 +100,17 @@ public class DrawActivity extends Activity {
     public boolean onTouchEvent(MotionEvent event) {
       switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
-          a = new Vertex(event.getX(), event.getY());
-          point = new Point(a);
-          requestRender();
-//          if(a == null) {
-//            a = new Vertex(event.getX(), event.getY());
-//          } else if(b == null) {
-//            b = new Vertex(event.getX(), event.getY());
-//          } else {
-//            c = new Vertex(event.getX(), event.getY());
-//            triangle = new Triangle(a, b, c);
-//            requestRender();
-//          }
+          Vertex selection = new Vertex(event.getX(), event.getY());
+          selectedVertices.add(selection);
+          if (selectedVertices.size() == 2) {
+            if (currentPrimitive == Primitives.RECTANGLE) {
+              primitives.add(new Rectangle(selectedVertices.get(0), selectedVertices.get(1)));
+            } else {
+              primitives.add(new Line(selectedVertices.get(0), selectedVertices.get(1)));
+            }
+            selectedVertices.clear();
+            requestRender();
+          }
           break;
       }
       return true;

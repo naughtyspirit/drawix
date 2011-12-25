@@ -5,6 +5,7 @@ package com.naughtyspirit.drawix.primitive;
  * Date: 25-12-2011
  */
 public abstract class BaseDrawablePrimitive {
+
   private final Vertex origin;
 
   protected BaseDrawablePrimitive(Vertex origin) {
