@@ -6,10 +6,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.*;
 import com.naughtyspirit.drawix.R;
-import com.naughtyspirit.drawix.primitive.BaseDrawablePrimitive;
-import com.naughtyspirit.drawix.primitive.Line;
-import com.naughtyspirit.drawix.primitive.Rectangle;
-import com.naughtyspirit.drawix.primitive.Vertex;
+import com.naughtyspirit.drawix.primitive.*;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -79,9 +76,10 @@ public class DrawActivity extends Activity {
       glClearColor(0, 0, 0, 1);
       glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-      for (BaseDrawablePrimitive primitive : primitives) {
-        primitive.draw();
-      }
+      new Circle(new Vertex(40, 40), 40).draw();
+//      for (BaseDrawablePrimitive primitive : primitives) {
+//        primitive.draw();
+//      }
 
     }
   }
