@@ -54,8 +54,6 @@ public class DrawActivity extends Activity {
       glClearColor(0, 0, 0, 1);
       glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-
-
       if (vertexList.size() == 3) {
         Log.d("About to draw", "Drawingg...");
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(3 * 2 * 4);
@@ -110,6 +108,19 @@ public class DrawActivity extends Activity {
           vertex.x = event.getX();
           vertex.y = event.getY();
           drawingSurfaceRenderer.vertexList.add(vertex);
+          if(drawingSurfaceRenderer.vertexList.size() == 2) {
+            Vertex a = drawingSurfaceRenderer.vertexList.get(0);
+            Vertex b = drawingSurfaceRenderer.vertexList.get(1);
+            drawingSurfaceRenderer.vertexList.remove(1);
+            Vertex c = new Vertex();
+            c.x = a.x;
+            c.y = b.y;
+            drawingSurfaceRenderer.vertexList.add(c);
+            Vertex d = new Vertex();
+            d.x = b.x;
+            d.y = a.y;
+            drawingSurfaceRenderer.vertexList.add(d);
+          }
           if (drawingSurfaceRenderer.vertexList.size() == 3) {
             requestRender();
           }
