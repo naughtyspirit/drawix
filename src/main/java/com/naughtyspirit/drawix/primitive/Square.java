@@ -2,7 +2,7 @@ package com.naughtyspirit.drawix.primitive;
 
 /**
  * Author: Venelin Valkov <venelin@naughtyspirit.com>
- * Date: 12/25/11
+ * Date: 25-12-2011
  */
 public class Square {
 

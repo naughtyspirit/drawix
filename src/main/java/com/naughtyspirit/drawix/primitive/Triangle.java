@@ -10,7 +10,7 @@ import static android.opengl.GLES10.*;
 
 /**
  * Author: Venelin Valkov <venelin@naughtyspirit.com>
- * Date: 12/25/11
+ * Date: 25-12-2011
  */
 public class Triangle {
   private List<Vertex> vertexList = new LinkedList<Vertex>();
