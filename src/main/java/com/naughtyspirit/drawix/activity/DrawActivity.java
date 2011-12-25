@@ -8,10 +8,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
-import com.naughtyspirit.drawix.primitive.Line;
-import com.naughtyspirit.drawix.primitive.Rectangle;
-import com.naughtyspirit.drawix.primitive.Triangle;
-import com.naughtyspirit.drawix.primitive.Vertex;
+import com.naughtyspirit.drawix.primitive.*;
 
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -33,6 +30,7 @@ public class DrawActivity extends Activity {
   private Rectangle rectangle = null;
   private Line line = null;
   private Triangle triangle = null;
+  private Point point;
 
   private class CustomRenderer implements GLSurfaceView.Renderer {
 
@@ -58,8 +56,11 @@ public class DrawActivity extends Activity {
 //      if(line != null) {
 //        line.draw();
 //      }
-      if(triangle != null) {
-        triangle.draw();
+//      if(triangle != null) {
+//        triangle.draw();
+//      }
+      if(point != null) {
+        point.draw();
       }
 //      if(rectangle != null) {
 //        rectangle.draw();
@@ -83,15 +84,18 @@ public class DrawActivity extends Activity {
     public boolean onTouchEvent(MotionEvent event) {
       switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
-          if(a == null) {
-            a = new Vertex(event.getX(), event.getY());
-          } else if(b == null) {
-            b = new Vertex(event.getX(), event.getY());
-          } else {
-            c = new Vertex(event.getX(), event.getY());
-            triangle = new Triangle(a, b, c);
-            requestRender();
-          }
+          a = new Vertex(event.getX(), event.getY());
+          point = new Point(a);
+          requestRender();
+//          if(a == null) {
+//            a = new Vertex(event.getX(), event.getY());
+//          } else if(b == null) {
+//            b = new Vertex(event.getX(), event.getY());
+//          } else {
+//            c = new Vertex(event.getX(), event.getY());
+//            triangle = new Triangle(a, b, c);
+//            requestRender();
+//          }
           break;
       }
       return true;
