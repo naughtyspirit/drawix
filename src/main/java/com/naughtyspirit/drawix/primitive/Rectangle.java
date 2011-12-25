@@ -43,9 +43,9 @@ public class Rectangle {
     }
     vertices.flip();
     vertices.position(0);
-    glVertexPointer(2, GL10.GL_FLOAT, 0, vertices);
+    glVertexPointer(2, GL_FLOAT, 0, vertices);
 
-    glDrawArrays(GL10.GL_TRIANGLES, 0, 3);
-    glDrawArrays(GL10.GL_TRIANGLES, 3, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 3, 3);
   }
 }

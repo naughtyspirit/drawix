@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import com.naughtyspirit.drawix.primitive.Line;
 import com.naughtyspirit.drawix.primitive.Rectangle;
 import com.naughtyspirit.drawix.primitive.Vertex;
 
@@ -29,10 +30,9 @@ import static android.opengl.GLES10.*;
 public class DrawActivity extends Activity {
 
   private Rectangle rectangle = null;
+  private Line line = null;
 
   private class CustomRenderer implements GLSurfaceView.Renderer {
-
-    public List<Vertex> vertexList = new ArrayList<Vertex>();
 
     @Override
     public void onSurfaceCreated(GL10 openGl, EGLConfig eglConfig) {
@@ -53,9 +53,12 @@ public class DrawActivity extends Activity {
     public void onDrawFrame(GL10 openGl) {
       glClearColor(0, 0, 0, 1);
       glClear(GL10.GL_COLOR_BUFFER_BIT);
-      if(rectangle != null) {
-        rectangle.draw();
+      if(line != null) {
+        line.draw();
       }
+//      if(rectangle != null) {
+//        rectangle.draw();
+//      }
     }
   }
 
@@ -79,7 +82,7 @@ public class DrawActivity extends Activity {
             a = new Vertex(event.getX(), event.getY());
           } else if(b == null) {
             b = new Vertex(event.getX(), event.getY());
-            rectangle = new Rectangle(a, b);
+            line = new Line(a, b);
             requestRender();
           }
           break;
