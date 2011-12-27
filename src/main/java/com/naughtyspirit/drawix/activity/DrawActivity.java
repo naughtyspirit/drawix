@@ -57,7 +57,7 @@ public class DrawActivity extends Activity {
       public void colorChanged(int color) {
         currentColor = color;
       }
-    }, Color.WHITE);
+    }, Color.WHITE, Color.WHITE);
     return dialog;
   }
 
