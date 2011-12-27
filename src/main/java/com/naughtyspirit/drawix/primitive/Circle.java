@@ -1,5 +1,9 @@
 package com.naughtyspirit.drawix.primitive;
 
+import com.naughtyspirit.drawix.collision.BoundingShape;
+import com.naughtyspirit.drawix.collision.CircleBounding;
+import com.naughtyspirit.drawix.collision.HasBoundingShape;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -10,13 +14,18 @@ import static android.opengl.GLES10.*;
  * Author: Venelin Valkov <venelin@naughtyspirit.com>
  * Date: 25-12-2011
  */
-public class Circle extends BaseDrawablePrimitive {
+public class Circle extends BaseDrawablePrimitive implements HasBoundingShape {
 
   private final float radius;
 
   public Circle(Vertex origin, float radius) {
     super(origin);
     this.radius = radius;
+  }
+
+  @Override
+  public BoundingShape getBoundingShape() {
+    return new CircleBounding(getOrigin(), radius);
   }
 
   @Override

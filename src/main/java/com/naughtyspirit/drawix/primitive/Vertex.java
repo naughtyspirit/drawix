@@ -20,4 +20,8 @@ public class Vertex {
   public float getY() {
     return y;
   }
+
+  public float distanceTo(Vertex other) {
+    return (float) Math.sqrt(x * other.x + y * other.y);
+  }
 }

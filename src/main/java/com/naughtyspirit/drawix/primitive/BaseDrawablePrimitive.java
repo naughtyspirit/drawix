@@ -1,5 +1,7 @@
 package com.naughtyspirit.drawix.primitive;
 
+import com.naughtyspirit.drawix.collision.BoundingShape;
+
 /**
  * Author: Venelin Valkov <venelin@naughtyspirit.com>
  * Date: 25-12-2011
