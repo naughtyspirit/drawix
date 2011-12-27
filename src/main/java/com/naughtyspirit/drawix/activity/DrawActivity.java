@@ -126,9 +126,7 @@ public class DrawActivity extends Activity {
                 Rectangle rectangle = (Rectangle) primitive;
                 BoundingShape boundingShape = hasBoundingShape.getBoundingShape();
                 Log.d("Overlapper width", rectangle.getWidth() + "");
-                Log.d("Overlapper real width", rectangle.realWidth() + "");
                 Log.d("Overlapper height", rectangle.getHeight() + "");
-                Log.d("Overlapper real height", rectangle.realHeight() + "");
                 if(boundingShape.isOverlappingWith(selection)) {
                   Log.d("Overlapper", "YES");
                 } else {
