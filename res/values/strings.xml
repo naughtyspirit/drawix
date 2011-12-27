@@ -3,4 +3,5 @@
     <string name="rectangle">Rectangle</string>
     <string name="line">Line</string>
     <string name="circle">Circle</string>
+    <string name="pick_color">Pick Color</string>
 </resources>

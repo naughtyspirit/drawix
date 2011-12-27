@@ -24,7 +24,7 @@ public class Line extends BaseDrawablePrimitive {
   }
 
   @Override
-  public void draw() {
+  protected void doDraw() {
     ByteBuffer buffer = ByteBuffer.allocateDirect(4 * 2 * 2);
     buffer.order(ByteOrder.nativeOrder());
     FloatBuffer vertices = buffer.asFloatBuffer();

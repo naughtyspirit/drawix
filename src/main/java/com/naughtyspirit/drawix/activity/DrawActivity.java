@@ -1,7 +1,9 @@
 package com.naughtyspirit.drawix.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,7 @@ import com.naughtyspirit.drawix.R;
 import com.naughtyspirit.drawix.collision.BoundingShape;
 import com.naughtyspirit.drawix.collision.HasBoundingShape;
 import com.naughtyspirit.drawix.primitive.*;
+import com.naughtyspirit.drawix.ui.ColorPickerDialog;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -28,6 +31,9 @@ public class DrawActivity extends Activity {
   private final List<Vertex> selectedVertices = new ArrayList<Vertex>();
 
   private final List<BaseDrawablePrimitive> primitives = new LinkedList<BaseDrawablePrimitive>();
+  private static final int PICK_COLOR_DIALOG = 1;
+
+  private int currentColor = Color.WHITE;
 
   private enum Primitives {
     CIRCLE,
@@ -45,17 +51,30 @@ public class DrawActivity extends Activity {
   }
 
   @Override
+  protected Dialog onCreateDialog(int id) {
+    ColorPickerDialog dialog = new ColorPickerDialog(this, new ColorPickerDialog.OnColorChangedListener() {
+      @Override
+      public void colorChanged(int color) {
+        currentColor = color;
+      }
+    }, Color.WHITE);
+    return dialog;
+  }
+
+  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.rectangle:
         currentPrimitive = Primitives.RECTANGLE;
         return true;
-
       case R.id.line:
         currentPrimitive = Primitives.LINE;
         return true;
       case R.id.circle:
         currentPrimitive = Primitives.CIRCLE;
+        return true;
+      case R.id.pick_color:
+        showDialog(PICK_COLOR_DIALOG);
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -74,7 +93,6 @@ public class DrawActivity extends Activity {
     @Override
     public void onSurfaceChanged(GL10 openGl, int width, int height) {
       glViewport(0, 0, width, height);
-
       // center is top left
       glMatrixMode(GL10.GL_PROJECTION);
       glLoadIdentity();
@@ -85,10 +103,10 @@ public class DrawActivity extends Activity {
     public void onDrawFrame(GL10 openGl) {
       glClearColor(0, 0, 0, 1);
       glClear(GL10.GL_COLOR_BUFFER_BIT);
+//      glColor4f(Color.red(currentColor)/255, Color.green(currentColor)/255, Color.blue(currentColor)/255, 1);
       for (BaseDrawablePrimitive primitive : primitives) {
         primitive.draw();
       }
-
     }
   }
 
@@ -109,31 +127,18 @@ public class DrawActivity extends Activity {
           Vertex selection = new Vertex(event.getX(), event.getY());
           selectedVertices.add(selection);
           if (selectedVertices.size() == 2) {
+            BaseDrawablePrimitive primitive;
             if (currentPrimitive == Primitives.RECTANGLE) {
-              primitives.add(new Rectangle(selectedVertices.get(0), selectedVertices.get(1)));
+              primitive = new Rectangle(selectedVertices.get(0), selectedVertices.get(1));
             } else if(currentPrimitive == Primitives.CIRCLE) {
-              primitives.add(new Circle(selectedVertices.get(0), selectedVertices.get(0).distanceTo(selection)));
+              primitive = new Circle(selectedVertices.get(0), selectedVertices.get(0).distanceTo(selection));
             } else {
-              primitives.add(new Line(selectedVertices.get(0), selectedVertices.get(1)));
+              primitive = new Line(selectedVertices.get(0), selectedVertices.get(1));
             }
-//            selectedVertices.clear();
+            primitive.setColor(currentColor);
+            primitives.add(primitive);
+            selectedVertices.clear();
             requestRender();
-          }
-          if(selectedVertices.size() > 2) {
-            for(BaseDrawablePrimitive primitive : primitives) {
-              if(primitive instanceof HasBoundingShape) {
-                HasBoundingShape hasBoundingShape = (HasBoundingShape) primitive;
-                Rectangle rectangle = (Rectangle) primitive;
-                BoundingShape boundingShape = hasBoundingShape.getBoundingShape();
-                Log.d("Overlapper width", rectangle.getWidth() + "");
-                Log.d("Overlapper height", rectangle.getHeight() + "");
-                if(boundingShape.isOverlappingWith(selection)) {
-                  Log.d("Overlapper", "YES");
-                } else {
-                  Log.d("Overlapper", "NO");
-                }
-              }
-            }
           }
           break;
       }

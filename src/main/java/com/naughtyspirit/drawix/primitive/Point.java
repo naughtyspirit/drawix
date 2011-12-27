@@ -17,7 +17,7 @@ public class Point extends BaseDrawablePrimitive {
   }
 
   @Override
-  public void draw() {
+  protected void doDraw() {
     ByteBuffer byteBuffer = ByteBuffer.allocateDirect(2 * 2 * 4);
     byteBuffer.order(ByteOrder.nativeOrder());
     FloatBuffer vertices = byteBuffer.asFloatBuffer();

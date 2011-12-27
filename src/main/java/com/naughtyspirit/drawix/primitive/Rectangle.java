@@ -38,7 +38,7 @@ public class Rectangle extends BaseDrawablePrimitive implements HasBoundingShape
   }
 
   @Override
-  public void draw() {
+  protected void doDraw() {
     ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertexList.size() * 2 * 4);
     byteBuffer.order(ByteOrder.nativeOrder());
     FloatBuffer vertices = byteBuffer.asFloatBuffer();

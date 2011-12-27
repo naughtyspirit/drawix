@@ -29,7 +29,7 @@ public class Circle extends BaseDrawablePrimitive implements HasBoundingShape {
   }
 
   @Override
-  public void draw() {
+  protected void doDraw() {
     int segments = 1000;
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
