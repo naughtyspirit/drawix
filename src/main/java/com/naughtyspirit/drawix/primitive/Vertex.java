@@ -1,5 +1,7 @@
 package com.naughtyspirit.drawix.primitive;
 
+import static java.lang.Math.pow;
+
 /**
  * Author: Venelin Valkov <venelin@naughtyspirit.com>
  * Date: 25-12-2011
@@ -22,6 +24,6 @@ public class Vertex {
   }
 
   public float distanceTo(Vertex other) {
-    return (float) Math.sqrt(x * other.x + y * other.y);
+    return (float) Math.sqrt(pow(other.x - x, 2) + pow(y - other.y, 2));
   }
 }

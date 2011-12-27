@@ -2,4 +2,5 @@
     <string name="app_name">Drawix</string>
     <string name="rectangle">Rectangle</string>
     <string name="line">Line</string>
+    <string name="circle">Circle</string>
 </resources>

@@ -56,14 +56,14 @@ public class Rectangle extends BaseDrawablePrimitive implements HasBoundingShape
 
   @Override
   public BoundingShape getBoundingShape() {
-    return new RectangleBounding(vertexList.get(1), getWidth(), getHeight());
+    return new RectangleBounding(getOrigin(), getWidth(), getHeight());
   }
 
-  private float getHeight() {
+  public float getHeight() {
     return vertexList.get(0).distanceTo(vertexList.get(1));
   }
 
-  private float getWidth() {
-    return vertexList.get(1).distanceTo(vertexList.get(2));
+  public float getWidth() {
+    return vertexList.get(1).distanceTo(vertexList.get(vertexList.size() - 1));
   }
 }

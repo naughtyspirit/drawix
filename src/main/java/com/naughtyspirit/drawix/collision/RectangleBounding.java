@@ -8,12 +8,12 @@ import com.naughtyspirit.drawix.primitive.Vertex;
  */
 public class RectangleBounding implements BoundingShape {
 
-  private final Vertex lowerLeft;
+  private final Vertex origin;
   private final float width;
   private final float height;
 
-  public RectangleBounding(Vertex lowerLeft, float width, float height) {
-    this.lowerLeft = lowerLeft;
+  public RectangleBounding(Vertex origin, float width, float height) {
+    this.origin = origin;
     this.width = width;
     this.height = height;
   }
@@ -22,25 +22,25 @@ public class RectangleBounding implements BoundingShape {
   public boolean isOverlappingWith(CircleBounding c) {
     float closestX = c.getOrigin().getX();
     float closestY = c.getOrigin().getY();
-    if (c.getOrigin().getX() < lowerLeft.getX()) {
-      closestX = lowerLeft.getX();
-    } else if (c.getOrigin().getX() > lowerLeft.getX() + width) {
-      closestX = lowerLeft.getX() + width;
+    if (c.getOrigin().getX() < origin.getX()) {
+      closestX = origin.getX();
+    } else if (c.getOrigin().getX() > origin.getX() + width) {
+      closestX = origin.getX() + width;
     }
-    if (c.getOrigin().getY() < lowerLeft.getY()) {
-      closestY = lowerLeft.getY();
-    } else if (c.getOrigin().getY() > lowerLeft.getY() + height) {
-      closestY = lowerLeft.getY() + height;
+    if (c.getOrigin().getY() < origin.getY()) {
+      closestY = origin.getY();
+    } else if (c.getOrigin().getY() > origin.getY() + height) {
+      closestY = origin.getY() + height;
     }
     return c.getOrigin().distanceTo(new Vertex(closestX, closestY)) < c.getRadius();
   }
 
   @Override
   public boolean isOverlappingWith(RectangleBounding other) {
-    if (lowerLeft.getX() < other.lowerLeft.getX() + other.width &&
-            lowerLeft.getX() + width > other.lowerLeft.getX() &&
-            lowerLeft.getY() < other.lowerLeft.getY() + other.height &&
-            lowerLeft.getY() + height > other.lowerLeft.getY()) {
+    if (origin.getX() < other.origin.getX() + other.width &&
+            origin.getX() + width > other.origin.getX() &&
+            origin.getY() < other.origin.getY() + other.height &&
+            origin.getY() + height > other.origin.getY()) {
       return true;
     }
     return false;
@@ -48,7 +48,7 @@ public class RectangleBounding implements BoundingShape {
 
   @Override
   public boolean isOverlappingWith(Vertex vertex) {
-    return lowerLeft.getX() <= vertex.getX() && lowerLeft.getX() + width >= vertex.getX() &&
-            lowerLeft.getY() <= vertex.getY() && lowerLeft.getY() + height >= vertex.getY();
+    return vertex.getX() >= origin.getX() && vertex.getX() <= origin.getX() + width &&
+           vertex.getY() >= origin.getY() && vertex.getY() <= origin.getY() + height;
   }
 }

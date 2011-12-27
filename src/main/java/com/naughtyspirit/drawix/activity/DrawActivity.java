@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import com.naughtyspirit.drawix.R;
+import com.naughtyspirit.drawix.collision.BoundingShape;
+import com.naughtyspirit.drawix.collision.HasBoundingShape;
 import com.naughtyspirit.drawix.primitive.*;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -26,9 +29,11 @@ public class DrawActivity extends Activity {
 
   private final List<BaseDrawablePrimitive> primitives = new LinkedList<BaseDrawablePrimitive>();
 
-  private enum Primitives {RECTANGLE, LINE}
-
-  ;
+  private enum Primitives {
+    CIRCLE,
+    RECTANGLE,
+    LINE
+  };
 
   private Primitives currentPrimitive = Primitives.RECTANGLE;
 
@@ -48,6 +53,9 @@ public class DrawActivity extends Activity {
 
       case R.id.line:
         currentPrimitive = Primitives.LINE;
+        return true;
+      case R.id.circle:
+        currentPrimitive = Primitives.CIRCLE;
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -103,11 +111,31 @@ public class DrawActivity extends Activity {
           if (selectedVertices.size() == 2) {
             if (currentPrimitive == Primitives.RECTANGLE) {
               primitives.add(new Rectangle(selectedVertices.get(0), selectedVertices.get(1)));
+            } else if(currentPrimitive == Primitives.CIRCLE) {
+              primitives.add(new Circle(selectedVertices.get(0), selectedVertices.get(0).distanceTo(selection)));
             } else {
               primitives.add(new Line(selectedVertices.get(0), selectedVertices.get(1)));
             }
-            selectedVertices.clear();
+//            selectedVertices.clear();
             requestRender();
+          }
+          if(selectedVertices.size() > 2) {
+            for(BaseDrawablePrimitive primitive : primitives) {
+              if(primitive instanceof HasBoundingShape) {
+                HasBoundingShape hasBoundingShape = (HasBoundingShape) primitive;
+                Rectangle rectangle = (Rectangle) primitive;
+                BoundingShape boundingShape = hasBoundingShape.getBoundingShape();
+                Log.d("Overlapper width", rectangle.getWidth() + "");
+                Log.d("Overlapper real width", rectangle.realWidth() + "");
+                Log.d("Overlapper height", rectangle.getHeight() + "");
+                Log.d("Overlapper real height", rectangle.realHeight() + "");
+                if(boundingShape.isOverlappingWith(selection)) {
+                  Log.d("Overlapper", "YES");
+                } else {
+                  Log.d("Overlapper", "NO");
+                }
+              }
+            }
           }
           break;
       }
