@@ -59,6 +59,8 @@ public class DrawActivity extends Activity {
     @Override
     public void onSurfaceCreated(GL10 openGl, EGLConfig eglConfig) {
       glEnableClientState(GL10.GL_VERTEX_ARRAY);
+      glEnable(GL_POINT_SMOOTH);
+      glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
     }
 
     @Override
@@ -75,11 +77,9 @@ public class DrawActivity extends Activity {
     public void onDrawFrame(GL10 openGl) {
       glClearColor(0, 0, 0, 1);
       glClear(GL10.GL_COLOR_BUFFER_BIT);
-
-      new Circle(new Vertex(40, 40), 40).draw();
-//      for (BaseDrawablePrimitive primitive : primitives) {
-//        primitive.draw();
-//      }
+      for (BaseDrawablePrimitive primitive : primitives) {
+        primitive.draw();
+      }
 
     }
   }

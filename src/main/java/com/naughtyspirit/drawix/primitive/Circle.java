@@ -21,19 +21,20 @@ public class Circle extends BaseDrawablePrimitive {
 
   @Override
   public void draw() {
-    int segments = 10;
-    int a = 0;
-    ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * (segments + 2));
-    vbb.order(ByteOrder.nativeOrder());
-    FloatBuffer vertices = vbb.asFloatBuffer();
-    int additionalSegment = 1;
+    int segments = 1000;
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_LINE_SMOOTH);
+    ByteBuffer buffer = ByteBuffer.allocateDirect(4 * 2 * (segments + 2));
+    buffer.order(ByteOrder.nativeOrder());
+    FloatBuffer vertices = buffer.asFloatBuffer();
 
     final float coefficient = 2.0f * (float) Math.PI / segments;
 
     for (int i = 0; i <= segments; i++) {
       float rads = i * coefficient;
-      float j = (float) (radius * Math.cos(rads + a) + getOrigin().getX());
-      float k = (float) (radius * Math.sin(rads + a) + getOrigin().getY());
+      float j = (float) (radius * Math.cos(rads) + getOrigin().getX());
+      float k = (float) (radius * Math.sin(rads) + getOrigin().getY());
 
       vertices.put(j);
       vertices.put(k);
@@ -43,6 +44,8 @@ public class Circle extends BaseDrawablePrimitive {
     vertices.position(0);
     glVertexPointer(2, GL_FLOAT, 0, vertices);
 
-    glDrawArrays(GL_LINE_STRIP, 0, segments + additionalSegment);
+//    glDrawArrays(GL_LINE_STRIP, 0, segments + 1);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, segments + 1);
+    glDisable(GL_BLEND);
   }
 }
