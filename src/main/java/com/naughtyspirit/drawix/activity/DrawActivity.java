@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
 import com.naughtyspirit.drawix.R;
-import com.naughtyspirit.drawix.collision.BoundingShape;
-import com.naughtyspirit.drawix.collision.HasBoundingShape;
 import com.naughtyspirit.drawix.primitive.*;
 import com.naughtyspirit.drawix.ui.ColorPickerDialog;
 
@@ -35,13 +33,14 @@ public class DrawActivity extends Activity {
 
   private int currentColor = Color.WHITE;
 
-  private enum Primitives {
+  private enum Actions {
     CIRCLE,
     RECTANGLE,
-    LINE
+    LINE,
+    SELECT
   };
 
-  private Primitives currentPrimitive = Primitives.RECTANGLE;
+  private Actions currentAction = Actions.RECTANGLE;
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,14 +63,17 @@ public class DrawActivity extends Activity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
+      case R.id.select_primitive:
+        currentAction = Actions.SELECT;
+        return true;
       case R.id.rectangle:
-        currentPrimitive = Primitives.RECTANGLE;
+        currentAction = Actions.RECTANGLE;
         return true;
       case R.id.line:
-        currentPrimitive = Primitives.LINE;
+        currentAction = Actions.LINE;
         return true;
       case R.id.circle:
-        currentPrimitive = Primitives.CIRCLE;
+        currentAction = Actions.CIRCLE;
         return true;
       case R.id.pick_color:
         showDialog(PICK_COLOR_DIALOG);
@@ -103,7 +105,6 @@ public class DrawActivity extends Activity {
     public void onDrawFrame(GL10 openGl) {
       glClearColor(0, 0, 0, 1);
       glClear(GL10.GL_COLOR_BUFFER_BIT);
-//      glColor4f(Color.red(currentColor)/255, Color.green(currentColor)/255, Color.blue(currentColor)/255, 1);
       for (BaseDrawablePrimitive primitive : primitives) {
         primitive.draw();
       }
@@ -122,25 +123,45 @@ public class DrawActivity extends Activity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+      Vertex selection = new Vertex(event.getX(), event.getY());
       switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
-          Vertex selection = new Vertex(event.getX(), event.getY());
-          selectedVertices.add(selection);
-          if (selectedVertices.size() == 2) {
-            BaseDrawablePrimitive primitive;
-            if (currentPrimitive == Primitives.RECTANGLE) {
-              primitive = new Rectangle(selectedVertices.get(0), selectedVertices.get(1));
-            } else if(currentPrimitive == Primitives.CIRCLE) {
-              primitive = new Circle(selectedVertices.get(0), selectedVertices.get(0).distanceTo(selection));
-            } else {
-              primitive = new Line(selectedVertices.get(0), selectedVertices.get(1));
+          if(currentAction == Actions.SELECT) {
+            for(BaseDrawablePrimitive primitive : primitives) {
+              if(primitive.isOverlappingWith(selection)) {
+                primitive.setSelected(true);
+                Log.d("SelectionLog", primitive.getClass().getSimpleName() + " is selected!");
+              } else {
+                primitive.setSelected(false);
+              }
             }
-            primitive.setColor(currentColor);
-            primitives.add(primitive);
-            selectedVertices.clear();
-            requestRender();
+          } else {
+            selectedVertices.add(selection);
+            if (selectedVertices.size() == 2) {
+              BaseDrawablePrimitive primitive;
+              if (currentAction == Actions.RECTANGLE) {
+                primitive = new Rectangle(selectedVertices.get(0), selectedVertices.get(1));
+              } else if(currentAction == Actions.CIRCLE) {
+                primitive = new Circle(selectedVertices.get(0), selectedVertices.get(0).distanceTo(selection));
+              } else {
+                primitive = new Line(selectedVertices.get(0), selectedVertices.get(1));
+              }
+              primitive.setColor(currentColor);
+              primitives.add(primitive);
+              selectedVertices.clear();
+              requestRender();
+            }
           }
           break;
+
+        case MotionEvent.ACTION_MOVE:
+          Log.d("Coordinates", "x: " + selection.getX() + " y: " + selection.getY());
+          for(BaseDrawablePrimitive primitive : primitives) {
+            if(primitive.isSelected()) {
+              primitive.moveTo(selection);
+            }
+          }
+          requestRender();
       }
       return true;
     }

@@ -22,8 +22,12 @@ public class Rectangle extends BaseDrawablePrimitive implements HasBoundingShape
 
   public Rectangle(Vertex origin, Vertex destination) {
     super(origin);
-    vertexList.add(origin);
+    addVertices(origin, destination);
+  }
 
+  private void addVertices(Vertex origin, Vertex destination) {
+    vertexList.clear();
+    vertexList.add(origin);
     // c
     vertexList.add(new Vertex(origin.getX(), destination.getY()));
     // d
@@ -35,6 +39,16 @@ public class Rectangle extends BaseDrawablePrimitive implements HasBoundingShape
     vertexList.add(new Vertex(destination.getX(), origin.getY()));
 
     vertexList.add(destination);
+  }
+
+  @Override
+  public void moveTo(Vertex point) {
+    float xDiff = point.getX() - vertexList.get(0).getX();
+    float yDiff = point.getY() - vertexList.get(0).getY();
+    Vertex oldDestination = vertexList.get(vertexList.size() - 1);
+    Vertex newDestination = new Vertex(oldDestination.getX() + xDiff, oldDestination.getY() + yDiff);
+    addVertices(point, newDestination);
+    super.moveTo(point);
   }
 
   @Override

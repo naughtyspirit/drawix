@@ -2,6 +2,7 @@ package com.naughtyspirit.drawix.primitive;
 
 import android.graphics.Color;
 import com.naughtyspirit.drawix.collision.BoundingShape;
+import com.naughtyspirit.drawix.collision.HasBoundingShape;
 
 import static android.opengl.GLES10.glColor4f;
 
@@ -14,6 +15,7 @@ public abstract class BaseDrawablePrimitive {
   private final Vertex origin;
   private int color;
   private float transparency;
+  private boolean isSelected;
 
   protected BaseDrawablePrimitive(Vertex origin) {
     this.origin = origin;
@@ -30,6 +32,14 @@ public abstract class BaseDrawablePrimitive {
     doDraw();
   }
 
+  public boolean isOverlappingWith(Vertex point) {
+    if(this instanceof HasBoundingShape) {
+      HasBoundingShape boundingShapeHolder = (HasBoundingShape) this;
+      return boundingShapeHolder.getBoundingShape().isOverlappingWith(point);
+    }
+    return false;
+  }
+
   protected abstract void doDraw();
 
   public void setColor(int color) {
@@ -38,5 +48,17 @@ public abstract class BaseDrawablePrimitive {
 
   public void setTransparency(float transparency) {
     this.transparency = transparency;
+  }
+
+  public boolean isSelected() {
+    return isSelected;
+  }
+
+  public void setSelected(boolean selected) {
+    isSelected = selected;
+  }
+
+  public void moveTo(Vertex point) {
+    getOrigin().moveTo(point);
   }
 }

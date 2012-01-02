@@ -23,6 +23,11 @@ public class Vertex {
     return y;
   }
 
+  public void moveTo(Vertex vertex) {
+    x = vertex.x;
+    y = vertex.y;
+  }
+
   public float distanceTo(Vertex other) {
     return (float) Math.sqrt(pow(other.x - x, 2) + pow(y - other.y, 2));
   }
